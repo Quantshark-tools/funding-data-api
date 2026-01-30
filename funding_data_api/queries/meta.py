@@ -3,13 +3,13 @@
 from typing import Annotated
 
 from fastapi import Depends
+from quantshark_shared.models.asset import Asset
+from quantshark_shared.models.contract import Contract
+from quantshark_shared.models.quote import Quote
+from quantshark_shared.models.section import Section
 from sqlmodel import col, select
 
 from funding_data_api.db import SessionDep
-from funding_data_api.shared.models.asset import Asset
-from funding_data_api.shared.models.contract import Contract
-from funding_data_api.shared.models.quote import Quote
-from funding_data_api.shared.models.section import Section
 
 
 async def get_all_assets(session: SessionDep) -> list[str]:

@@ -16,8 +16,13 @@ dependencies = [
     "psycopg[binary]>=3.2.12",
     "greenlet>=3.2.4",
     # TimescaleDB dialect
-    "sqlalchemy-timescaledb @ git+https://github.com/NikitaPirate/sqlalchemy-timescaledb.git",
+    "sqlalchemy-timescaledb",
+    "quantshark-shared",
 ]
+
+[tool.uv.sources]
+quantshark-shared = { git = "https://github.com/Quantshark-tools/shared.git" }
+sqlalchemy-timescaledb = { git = "https://github.com/NikitaPirate/sqlalchemy-timescaledb.git" }
 
 [dependency-groups]
 dev = [
