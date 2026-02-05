@@ -15,7 +15,7 @@ SEARCH_CONTRACTS_SQL = text(
     WITH
     tokens AS (
       SELECT unnest(
-        regexp_split_to_array(lower(trim(:query)), E'[\\s\\-/]+')
+        regexp_split_to_array(lower(trim(:query)), E'[-/\\s]+')
       ) AS token
       WHERE trim(:query) != ''
     ),
