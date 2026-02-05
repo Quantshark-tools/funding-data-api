@@ -32,6 +32,7 @@ dev = [
     "pyright>=1.1.407",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
+    "quantshark-shared[testing]",
 ]
 
 [tool.pytest.ini_options]

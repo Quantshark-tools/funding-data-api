@@ -1,18 +1,14 @@
-"""Query dependencies for meta endpoints."""
+"""Query helpers for meta endpoints."""
 
-from typing import Annotated
-
-from fastapi import Depends
 from quantshark_shared.models.asset import Asset
 from quantshark_shared.models.contract import Contract
 from quantshark_shared.models.quote import Quote
 from quantshark_shared.models.section import Section
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import col, select
 
-from funding_data_api.db import SessionDep
 
-
-async def get_all_assets(session: SessionDep) -> list[str]:
+async def get_all_assets(session: AsyncSession) -> list[str]:
     """Get all asset names that exist in contracts.
 
     Returns assets sorted by market_cap_rank (ascending), then alphabetically
@@ -41,19 +37,13 @@ async def get_all_assets(session: SessionDep) -> list[str]:
     return sorted_asset_names
 
 
-async def get_all_sections(session: SessionDep) -> list[str]:
+async def get_all_sections(session: AsyncSession) -> list[str]:
     """Get all section names ordered alphabetically."""
     result = await session.execute(select(Section.name).order_by(Section.name))
     return [row[0] for row in result]
 
 
-async def get_all_quotes(session: SessionDep) -> list[str]:
+async def get_all_quotes(session: AsyncSession) -> list[str]:
     """Get all quote names ordered alphabetically."""
     result = await session.execute(select(Quote.name).order_by(Quote.name))
     return [row[0] for row in result]
-
-
-# Dependency aliases
-GetAssetsDep = Annotated[list[str], Depends(get_all_assets)]
-GetSectionsDep = Annotated[list[str], Depends(get_all_sections)]
-GetQuotesDep = Annotated[list[str], Depends(get_all_quotes)]
