@@ -1,11 +1,8 @@
-"""Query dependency for contract search."""
+"""Query helper for contract search."""
 
-from typing import Annotated
-
-from fastapi import Depends, Query
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from funding_data_api.db import SessionDep
 from funding_data_api.dto.meta import ContractSearchResult
 
 DEFAULT_LIMIT = 20
@@ -101,10 +98,10 @@ SEARCH_CONTRACTS_SQL = text(
 
 
 async def search_contracts(
-    session: SessionDep,
-    query: Annotated[str, Query(min_length=1, max_length=200)],
-    limit: Annotated[int, Query(DEFAULT_LIMIT, ge=1, le=MAX_LIMIT)],
-    debug: Annotated[bool, Query(False)],
+    session: AsyncSession,
+    query: str,
+    limit: int = DEFAULT_LIMIT,
+    debug: bool = False,
 ) -> list[ContractSearchResult]:
     """Search contracts by query with prefix-aware scoring and fuzzy fallback."""
     cleaned_query = query.strip()
@@ -139,6 +136,3 @@ async def search_contracts(
         )
 
     return contracts
-
-
-SearchContractsDep = Annotated[list[ContractSearchResult], Depends(search_contracts)]
