@@ -592,7 +592,7 @@ wheels = [
 [[package]]
 name = "quantshark-shared"
 version = "0.1.0"
-source = { git = "https://github.com/Quantshark-tools/shared.git#e97f6768639c4a22d56576bfe43b48e219bfa6f5" }
+source = { git = "https://github.com/Quantshark-tools/shared.git#bca99398a98cf58c17f38b9cf35d5c7de1846674" }
 dependencies = [
     { name = "alembic" },
     { name = "alembic-postgresql-enum" },
