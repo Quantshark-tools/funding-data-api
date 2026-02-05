@@ -22,6 +22,7 @@ dependencies = [
 
 [tool.uv.sources]
 quantshark-shared = { git = "https://github.com/Quantshark-tools/shared.git" }
+
 sqlalchemy-timescaledb = { git = "https://github.com/NikitaPirate/sqlalchemy-timescaledb.git" }
 
 [dependency-groups]
@@ -29,7 +30,12 @@ dev = [
     "pre-commit>=4.4.0",
     "ruff>=0.14.4",
     "pyright>=1.1.407",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = "."
 
 [tool.ruff]
 line-length = 99
