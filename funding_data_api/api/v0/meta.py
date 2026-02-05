@@ -3,7 +3,13 @@
 from fastapi import APIRouter
 
 from funding_data_api.dto.base import BaseResponse
-from funding_data_api.dto.meta import AssetNames, QuoteNames, SectionNames
+from funding_data_api.dto.meta import (
+    AssetNames,
+    ContractSearchResults,
+    QuoteNames,
+    SectionNames,
+)
+from funding_data_api.queries.contract_search import SearchContractsDep
 from funding_data_api.queries.meta import GetAssetsDep, GetQuotesDep, GetSectionsDep
 
 router = APIRouter(prefix="/meta", tags=["meta"])
@@ -29,3 +35,11 @@ async def get_sections(sections: GetSectionsDep) -> BaseResponse[SectionNames]:
 async def get_quotes(quotes: GetQuotesDep) -> BaseResponse[QuoteNames]:
     """Get all quote names ordered alphabetically."""
     return BaseResponse(data=QuoteNames(names=quotes))
+
+
+@router.get("/contracts/search", response_model_exclude_none=True)
+async def search_contracts(
+    contracts: SearchContractsDep,
+) -> BaseResponse[ContractSearchResults]:
+    """Search contracts with prefix-aware scoring and fuzzy fallback."""
+    return BaseResponse(data=ContractSearchResults(contracts=contracts))

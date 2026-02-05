@@ -2,6 +2,7 @@ import os
 from collections.abc import AsyncIterator
 
 import pytest
+import pytest_asyncio
 import sqlalchemy_timescaledb  # noqa: F401 need for dialect registration
 from quantshark_shared.testing.db import DatabaseConfig
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,7 +20,7 @@ def fda_db_env(db_config: DatabaseConfig) -> DatabaseConfig:
     return db_config
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def db_session(fda_db_env: DatabaseConfig) -> AsyncIterator[AsyncSession]:
     from funding_data_api.db import get_session
 
