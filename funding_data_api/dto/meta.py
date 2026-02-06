@@ -1,5 +1,6 @@
 """DTOs for meta endpoints."""
 
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -32,3 +33,14 @@ class ContractSearchResult(BaseModel):
 
 class ContractSearchResults(BaseModel):
     contracts: list[ContractSearchResult]
+
+
+class ContractMeta(BaseModel):
+    id: UUID
+    asset_name: str
+    section_name: str
+    quote_name: str
+    funding_interval: int
+    synced: bool
+    special_fields: dict[str, Any]
+    deprecated: bool

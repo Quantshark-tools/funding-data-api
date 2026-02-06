@@ -1,11 +1,15 @@
 """Query helpers for meta endpoints."""
 
+from uuid import UUID
+
 from quantshark_shared.models.asset import Asset
 from quantshark_shared.models.contract import Contract
 from quantshark_shared.models.quote import Quote
 from quantshark_shared.models.section import Section
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import col, select
+
+from funding_data_api.dto.meta import ContractMeta
 
 
 async def get_all_assets(session: AsyncSession) -> list[str]:
@@ -47,3 +51,22 @@ async def get_all_quotes(session: AsyncSession) -> list[str]:
     """Get all quote names ordered alphabetically."""
     result = await session.execute(select(Quote.name).order_by(Quote.name))
     return [row[0] for row in result]
+
+
+async def get_contract_by_id(session: AsyncSession, contract_id: UUID) -> ContractMeta | None:
+    """Get single contract metadata by contract id."""
+    result = await session.execute(select(Contract).where(Contract.id == contract_id))
+    contract = result.scalar_one_or_none()
+    if contract is None:
+        return None
+
+    return ContractMeta(
+        id=contract.id,
+        asset_name=contract.asset_name,
+        section_name=contract.section_name,
+        quote_name=contract.quote_name,
+        funding_interval=contract.funding_interval,
+        synced=contract.synced,
+        special_fields=contract.special_fields,
+        deprecated=contract.deprecated,
+    )

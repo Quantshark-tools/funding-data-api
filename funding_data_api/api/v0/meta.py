@@ -1,18 +1,26 @@
 """Meta endpoints for assets, sections, and quotes."""
 
-from fastapi import APIRouter, Query
+from uuid import UUID
+
+from fastapi import APIRouter, HTTPException, Query, status
 
 from funding_data_api.db import SessionDep
 from funding_data_api.dto.base import BaseResponse
 from funding_data_api.dto.meta import (
     AssetNames,
+    ContractMeta,
     ContractSearchResults,
     QuoteNames,
     SectionNames,
 )
 from funding_data_api.queries.contract_search import DEFAULT_LIMIT, MAX_LIMIT
 from funding_data_api.queries.contract_search import search_contracts as fetch_contracts
-from funding_data_api.queries.meta import get_all_assets, get_all_quotes, get_all_sections
+from funding_data_api.queries.meta import (
+    get_all_assets,
+    get_all_quotes,
+    get_all_sections,
+    get_contract_by_id,
+)
 
 router = APIRouter(prefix="/meta", tags=["meta"])
 
@@ -52,3 +60,16 @@ async def search_contracts(
     """Search contracts with prefix-aware scoring and fuzzy fallback."""
     contracts = await fetch_contracts(session, query=query, limit=limit, debug=debug)
     return BaseResponse(data=ContractSearchResults(contracts=contracts))
+
+
+@router.get("/contracts/{contract_id}")
+async def get_contract_meta(session: SessionDep, contract_id: UUID) -> BaseResponse[ContractMeta]:
+    """Get single contract metadata by contract id."""
+    contract = await get_contract_by_id(session, contract_id)
+    if contract is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Contract not found",
+        )
+
+    return BaseResponse(data=contract)
