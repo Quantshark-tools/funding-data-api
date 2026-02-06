@@ -4,7 +4,7 @@ from collections.abc import AsyncIterator
 import pytest
 import pytest_asyncio
 import sqlalchemy_timescaledb  # noqa: F401 need for dialect registration
-from quantshark_shared.testing.db import DatabaseConfig
+from quantshark_shared.testing.db import DatabaseConfig, truncate_all_tables
 from sqlalchemy.ext.asyncio import AsyncSession
 
 pytest_plugins = ["quantshark_shared.testing.fixtures"]
@@ -26,3 +26,10 @@ async def db_session(fda_db_env: DatabaseConfig) -> AsyncIterator[AsyncSession]:
 
     async for session in get_session():
         yield session
+
+
+@pytest_asyncio.fixture
+async def db_cleanup_for_query_tests(db_session: AsyncSession) -> None:
+    await truncate_all_tables(db_session, exclude={"alembic_version"})
+    yield
+    await truncate_all_tables(db_session, exclude={"alembic_version"})
