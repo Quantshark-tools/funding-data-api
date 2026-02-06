@@ -23,14 +23,13 @@ from funding_data_api.settings import settings
 
 
 def get_engine_kwargs() -> dict[str, object]:
-    """Returns engine kwargs with defaults."""
+    """Returns engine kwargs with defaults and optional FDA overrides."""
     defaults = {
         "echo": False,
         "pool_pre_ping": True,
         "pool_size": 10,
         "max_overflow": 50,
     }
-
     user_kwargs = settings.db.engine_kwargs or {}
     return {**defaults, **user_kwargs}
 
@@ -47,11 +46,10 @@ engine = create_async_engine(
 
 
 def get_session_kwargs() -> dict[str, object]:
-    """Returns session kwargs with defaults."""
+    """Returns session kwargs with defaults and optional FDA overrides."""
     defaults = {
         "expire_on_commit": False,
     }
-
     user_kwargs = settings.db.session_kwargs or {}
     return {**defaults, **user_kwargs}
 

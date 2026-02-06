@@ -12,11 +12,13 @@ pytest_plugins = ["quantshark_shared.testing.fixtures"]
 
 @pytest.fixture(scope="session")
 def fda_db_env(db_config: DatabaseConfig) -> DatabaseConfig:
-    os.environ["FDA_DB_HOST"] = db_config.host
-    os.environ["FDA_DB_PORT"] = str(db_config.port)
-    os.environ["FDA_DB_USER"] = db_config.user
-    os.environ["FDA_DB_PASSWORD"] = db_config.password
-    os.environ["FDA_DB_DBNAME"] = db_config.dbname
+    os.environ["DB_HOST"] = db_config.host
+    os.environ["DB_PORT"] = str(db_config.port)
+    os.environ["DB_USER"] = db_config.user
+    os.environ["DB_PASSWORD"] = db_config.password
+    os.environ["DB_DBNAME"] = db_config.dbname
+    os.environ["FDA_ENGINE_KWARGS"] = '{"pool_size":10,"max_overflow":50,"pool_pre_ping":true}'
+    os.environ["FDA_SESSION_KWARGS"] = '{"expire_on_commit":false}'
     return db_config
 
 
