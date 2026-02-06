@@ -48,4 +48,7 @@ class Settings(BaseModel):
     db: FDADBSettings
 
 
-settings = Settings(cors=CORSSettings(), db=FDADBSettings())
+settings = Settings(
+    cors=CORSSettings(),
+    db=FDADBSettings(),  # pyright: ignore[reportCallIssue]
+)
